@@ -1,5 +1,5 @@
 <?php
-namespace Laravel\Datatables\Services;
+namespace Laravel\DataTables\Services;
 
 use Arr;
 use Schema;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Laravel\DataTables\Contracts\Displayable;
 use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
 
-abstract class BaseDatatableService implements Displayable
+abstract class BaseDataTableService implements Displayable
 {
     use Macroable;
 
