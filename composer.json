@@ -1,0 +1,34 @@
+{
+    "name": "sectheater/laravel-datatables",
+    "description": "Modern Laravel Datatable",
+    "keywords" : ["Laravel Datatable", "Datatables", "Datatables Vue", "Datatables React"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mohammed Osama",
+            "email": "mohammedosama@ieee.org"
+        }, 
+        {
+            "name": "Mohammed Zayed",
+            "email": "mohamedzayed@gmail.com"
+        },
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+         "psr-4": {
+            "Laravel\\DataTables\\" : "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Laravel\\DataTables\\LaravelDataTablesServiceProvider"
+            ]
+        }
+    }
+
+
+
+}
