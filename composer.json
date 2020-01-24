@@ -12,7 +12,7 @@
         {
             "name": "Mohammed Zayed",
             "email": "mohamedzayed@gmail.com"
-        },
+        }
     ],
     "minimum-stability": "dev",
     "require": {},
