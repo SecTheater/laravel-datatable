@@ -9,6 +9,7 @@ class LaravelDataTablesServiceProvider extends ServiceProvider
     //TODO: ask the user for the preset (react/vue/angular)
     public function register()
     {
+
         if ($this->app->runningInConsole()) {
             $this->registerConsoleCommands();
         }

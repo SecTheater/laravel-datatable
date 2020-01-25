@@ -1,0 +1,29 @@
+<?php
+namespace DummyNamespace;
+
+use Illuminate\Database\Eloquent\Builder;
+use Laravel\DataTables\Services\BaseDataTableService;
+use NamespacedDummyModel;
+class DummiesDatatableService extends BaseDatatableService
+{
+    /**
+     * @var mixed
+     */
+    private $dummies;
+
+    /**
+     * @param DummyModel $dummies
+     */
+    public function __construct(DummyModel $dummies)
+    {
+        $this->dummies = $dummies;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function query(): Builder
+    {
+        return $this->dummies->query();
+    }
+}
