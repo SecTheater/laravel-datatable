@@ -9,6 +9,7 @@ use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Laravel\DataTables\Contracts\Displayable;
+use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
 use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
 
 abstract class BaseDataTableService implements Displayable
@@ -178,6 +179,7 @@ abstract class BaseDataTableService implements Displayable
     protected function buildSearchQuery(Builder $builder, Request $request): Builder
     {
         ['operator' => $operator, 'value' => $value] = $this->resolveQueryParts($request->operator, $request->value);
+        throw_if(!in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
 
         return $builder->where($request->column, $operator, $value);
     }
