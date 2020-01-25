@@ -4,6 +4,7 @@ namespace DummyNamespace;
 use Illuminate\Database\Eloquent\Builder;
 use Laravel\DataTables\Services\BaseDataTableService;
 use NamespacedDummyModel;
+
 class DummiesDatatableService extends BaseDatatableService
 {
     /**

@@ -24,8 +24,8 @@ trait Deletable
         }
 
         return $this->builder()->whereIn(
-            $this->builder()->getModel()->getQualifiedKeyName(), $ids
+            $this->builder()->getModel()->getQualifiedKeyName(),
+            $ids
         )->delete();
-
     }
 }

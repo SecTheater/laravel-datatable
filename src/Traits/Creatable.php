@@ -4,6 +4,7 @@ namespace Laravel\DataTables\Traits;
 
 use Arr;
 use Illuminate\Database\Eloquent\Model;
+
 trait Creatable
 {
     /**
@@ -17,7 +18,7 @@ trait Creatable
      * @param array $data
      * @return mixed
      */
-    public function create(array $data): ?Model
+    public function create(array $data): ? Model
     {
         if (!$this->allowCreation) {
             return null;

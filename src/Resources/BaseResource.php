@@ -31,13 +31,13 @@ abstract class BaseResource extends JsonResource
      */
     public function toArray($request)
     {
-
         return [
             'id' => $this->id,
             'created_at_human' => optional($this->created_at)->diffForHumans(),
             'updated_at_human' => optional($this->updated_at)->diffForHumans(),
         ] + Arr::only(
-            $this->resource->toArray(), $this->dataTable()->getDisplayableColumns()
+            $this->resource->toArray(),
+            $this->dataTable()->getDisplayableColumns()
         );
     }
 }

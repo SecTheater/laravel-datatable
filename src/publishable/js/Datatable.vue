@@ -4,7 +4,7 @@
             <div class="panel-heading">
                 <a
                     href="#"
-                    v-if="response.allow.creation"
+                    v-if="response.allow.creatable"
                     class="pull-right"
                     @click.prevent="creating.active = !creating.active"
                     >
@@ -12,7 +12,7 @@
                 </a>
             </div>
             <div class="panel-body">
-                <div class="well" v-if="response.allow.creation && creating.active">
+                <div class="well" v-if="response.allow.creatable && creating.active">
                     <form action="#" class="form-horizontal" @submit.prevent="store">
                         <div class="form-group" v-for="column in response.updatable" :class="{ 'has-error': creating.errors[column] }">
                             <label :for="column" class="col-md-3 control-label" >
@@ -104,7 +104,7 @@
                                     <span class="sortable" @click="sortBy(column)">
                                         {{ response.custom_columns[column] || column }}
                                     </span>
-                                    <span v-if="sort.key === column" class="arrow" :class="{'arrow--asc': sort.order === 'asc', 'arrow--desc' sort.order === 'desc' }"></span>
+                                    <span v-if="sort.key === column" class="arrow" :class="{'arrow--asc': sort.order === 'asc', 'arrow--desc': sort.order === 'desc' }"></span>
                                 </th>
                                 <th>&nbsp;</th>
                                 <th>&nbsp;</th>
@@ -116,9 +116,9 @@
                                     <input type="checkbox" v-model="selected" :value="record.id" />
                                 </td>
                                 <td v-for="(columnValue, column) in record">
-                                    <template v-if=" editing.id === record.id && isUpdatable(column)">
+                                    <template v-if="editing.id === record.id && isUpdatable(column)">
                                         <div class="form-group" :class="{'has-error': editing.errors[column]}">
-                                            <input type="text" :value="columnValue" class="form-control" v-model="editing.form[column]" />
+                                            <input type="text" class="form-control" v-model="editing.form[column]" />
                                             <span class="help-block" v-if="editing.errors[column]">
                                                 <strong>{{ editing.errors[column][0] }}</strong>
                                             </span>
@@ -138,7 +138,7 @@
                                     </template>
                                 </td>
                                 <td>
-                                    <a href="#" @click.prevent="destroy(record.id)" v-if="response.allow.deletion">
+                                    <a href="#" @click.prevent="destroy(record.id)" v-if="response.allow.deletable">
                                         Delete
                                     </a>
                                 </td>
@@ -153,9 +153,10 @@
 </template>
 <script>
 import queryString from 'query-string'
+
 export default {
     props: [
-    'endpoint'
+        'endpoint'
     ],
     data() {
         return {
@@ -185,7 +186,7 @@ export default {
                 records: [],
                 displayable: [],
                 updatable: [],
-                allow: []
+                allow: {}
             },
             selected: []
         }
@@ -213,10 +214,13 @@ export default {
             return this.filteredRecords.length <= 500;
         }
     },
+    mounted() {
+        this.getRecords()
+    },
     methods: {
         getRecords() {
-            return axios.get(`${this.endpoint}/?${this.getQueryParameters()}`).then(response => {
-                this.response = response.data.data
+            axios.get(`${this.endpoint}/?${this.getQueryParameters()}`).then(response => {
+                this.response = response.data
             })
         },
         getQueryParameters() {
@@ -279,8 +283,5 @@ export default {
             this.selected = _.map(this.filteredRecords, 'id')
         }
     },
-    mounted() {
-        this.getRecords()
-    }
 }
 </script>
