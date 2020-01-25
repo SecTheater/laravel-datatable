@@ -179,7 +179,8 @@ abstract class BaseDataTableService implements Displayable
     protected function buildSearchQuery(Builder $builder, Request $request): Builder
     {
         ['operator' => $operator, 'value' => $value] = $this->resolveQueryParts($request->operator, $request->value);
-        throw_if(!in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
+        // validate against the request column which coming through the request object, that it must exist at the database columns, as well as the displayable columns.
+        throw_unless(in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
 
         return $builder->where($request->column, $operator, $value);
     }
