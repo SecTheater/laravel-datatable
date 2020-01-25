@@ -77,66 +77,6 @@ abstract class BaseDataTableService implements Displayable
     }
 
     /**
-     * Get The File Name When Exporting.
-     *
-     * @return string
-     */
-    public function filename()
-    {
-        return vsprintf('%name_%date', [
-            'name' => ucfirst($this->getTable()),
-            'date' => date('Y-m-d_H:i:s'),
-        ]);
-    }
-
-    /**
-     * Get columns without primary key.
-     *
-     * @param array $columns
-     */
-    public function getColumnsWithoutPrimaryKey(array $columns) : array
-    {
-        $primaryKey = $this->builder()->getModel()->getKeyName();
-
-        return array_filter($columns, function ($column) use ($primaryKey) {
-            return $primaryKey !== $column;
-        });
-    }
-
-    /**
-     * Get Custom Column Names.
-     *
-     * @return array
-     */
-    public function getCustomColumnNames() : array
-    {
-        if (method_exists($this, 'getCustomColumnNames')) {
-            return $this->getCustomColumnNames();
-        }
-
-        return [];
-    }
-
-    /**
-     * Get displayable columns.
-     *
-     * @return array
-     */
-    public function getDisplayableColumns() : array
-    {
-        if (method_exists($this, 'getDisplayableColumns')) {
-            return array_values($this->getDisplayableColumns());
-        }
-
-        return array_values(
-            array_diff(
-                $this->getDatabaseColumnNames(),
-                $this->getHidden()
-            )
-        );
-    }
-
-    /**
      * Fetch records from the database.
      *
      * @param  Request    $request
@@ -175,20 +115,6 @@ abstract class BaseDataTableService implements Displayable
     public function getTable() : string
     {
         return $this->builder()->getModel()->getTable();
-    }
-
-    /**
-     * Get the columns that user can see at the frontend to update.
-     *
-     * @return array
-     */
-    public function getUpdatableColumns() : array
-    {
-        if (method_exists($this->builder()->getModel(), 'getUpdatableColumns')) {
-            return array_values($this->getColumnsWithoutPrimaryKey($this->builder()->getModel()->getUpdatableColumns()));
-        }
-
-        return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
     }
 
     /**
@@ -267,5 +193,18 @@ abstract class BaseDataTableService implements Displayable
 
             ],
         ], $operator);
+    }
+
+    /**
+     * Get The File Name When Exporting.
+     *
+     * @return string
+     */
+    public function filename()
+    {
+        return vsprintf('%name_%date', [
+            'name' => ucfirst($this->getTable()),
+            'date' => date('Y-m-d_H:i:s'),
+        ]);
     }
 }

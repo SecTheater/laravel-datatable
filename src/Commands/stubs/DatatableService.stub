@@ -5,7 +5,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Laravel\DataTables\Services\BaseDataTableService;
 use NamespacedDummyModel;
 
-class DummiesDatatableService extends BaseDatatableService
+class DummiesDatatableService extends BaseDataTableService
 {
     /**
      * @var mixed
@@ -31,12 +31,36 @@ class DummiesDatatableService extends BaseDatatableService
     }
 
     /**
-     * Get The File Name When Exporting.
+     * Get displayable columns.
      *
-     * @return string
+     * @return array
      */
-    public function filename() : string
+    public function getDisplayableColumns() : array
     {
-        return $this->dummies->getTable() . '_' . date('Y-m-d_H:i:s');
+        return [
+            'id',
+            'created_at',
+            'updated_at',
+        ];
+    }
+
+    /**
+     * Get Custom Column Names.
+     *
+     * @return array
+     */
+    public function getCustomColumnNames() : array
+    {
+        return [];
+    }
+
+    /**
+     * Get the columns that user can see at the frontend to update.
+     *
+     * @return array
+     */
+    public function getUpdatableColumns() : array
+    {
+        return [];
     }
 }
