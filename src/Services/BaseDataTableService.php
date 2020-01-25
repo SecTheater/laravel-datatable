@@ -4,6 +4,7 @@ namespace Laravel\DataTables\Services;
 use Arr;
 use Schema;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,6 +37,24 @@ abstract class BaseDataTableService implements Displayable
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function builder(): Builder
+    {
+        /**
+         * @var mixed
+         */
+        static $builder = null;
+
+        if (!is_null($builder)) {
+            return $builder;
+        }
+        $builder = $this->query();
+
+        return $builder;
+    }
+
+    /**
+     * @param $columns
+     */
+    public function getColumnsWithoutPrimaryKey($columns)
     {
         $primaryKey = $this->getModel()->getKeyName();
 
@@ -80,7 +99,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @return mixed
      */
-    public function getModel()
+    public function getModel(): Model
     {
         /**
          * @var mixed
@@ -120,7 +139,9 @@ abstract class BaseDataTableService implements Displayable
         try {
             // if the request doesn't have a limit, it will return null, and since limit takes an integer value >= 0, then it won't limit
             // at all since we will replace the null with a negative number.
-            return $builder->select(...$this->getSelectableColumns())->limit($request->limit ?? -1)->get();
+            return $builder->select(...$this->getSelectableColumns())->limit(
+                is_int($request->limit) ? $request->limit : -1
+            )->get();
         } catch (QueryException $e) {
             return collect([]);
         }
@@ -129,7 +150,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @return mixed
      */
-    public function getSelectableColumns()
+    public function getSelectableColumns(): array
     {
         if (method_exists($model = $this->getModel(), 'getSelectableColumns')) {
             return $model->getSelectableColumns();
@@ -146,6 +167,15 @@ abstract class BaseDataTableService implements Displayable
     public function getTable(): string
     {
         return $this->getModel()->getTable();
+    }
+
+    public function getUpdatableColumns(): array
+    {
+        if (method_exists($this->getModel(), 'getUpdatableColumns')) {
+            return array_values($this->getColumnsWithoutPrimaryKey($this->getModel()->getUpdatableColumns()));
+        }
+
+        return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
     }
 
     /**

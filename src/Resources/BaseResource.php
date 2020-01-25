@@ -14,12 +14,12 @@ abstract class BaseResource extends JsonResource
     abstract public function dataTable(): BaseDataTableService;
 
     /**
-     * @param $collection
+     * @param $resource
      */
-    public function rejectNullValues($collection)
+    public function rejectNullValues($resource)
     {
-        return array_filter($collection, function ($resource) {
-            return !is_null($resource) || !empty($resource);
+        return array_filter($resource, function ($value) {
+            return !is_null($value) || !empty($value);
         });
     }
 
@@ -31,13 +31,13 @@ abstract class BaseResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        return $this->rejectNullValues([
             'id' => $this->id,
             'created_at_human' => optional($this->created_at)->diffForHumans(),
             'updated_at_human' => optional($this->updated_at)->diffForHumans(),
         ] + Arr::only(
             $this->resource->toArray(),
             $this->dataTable()->getDisplayableColumns()
-        );
+        ));
     }
 }
