@@ -8,7 +8,7 @@
         {
             "name": "Mohammed Osama",
             "email": "mohammedosama@ieee.org"
-        }, 
+        },
         {
             "name": "Mohammed Zayed",
             "email": "mohamedzayed@gmail.com"
@@ -26,7 +26,7 @@
         }
     },
     "autoload": {
-         "psr-4": {
+        "psr-4": {
             "Laravel\\DataTables\\" : "src/"
         }
     },
@@ -37,7 +37,4 @@
             ]
         }
     }
-
-
-
 }

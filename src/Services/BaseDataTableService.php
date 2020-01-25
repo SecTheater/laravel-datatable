@@ -28,14 +28,19 @@ abstract class BaseDataTableService implements Displayable
     public $relations;
 
     /**
-     * get/set the eloquent builder
+     * Get query source of dataTable.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    abstract public function query() : Builder;
+
+    /**
+     * Get/Set the eloquent builder.
+     *
      * @return Builder
      */
-    public function builder(): Builder
+    public function builder() : Builder
     {
-        /**
-         * @var mixed
-         */
         static $builder = null;
 
         if (!is_null($builder)) {
@@ -61,13 +66,15 @@ abstract class BaseDataTableService implements Displayable
     {
         $primaryKey = $this->builder()->getModel()->getKeyName();
 
-        return array_filter($columns, fn($column) => $primaryKey !== $column);
+        return array_filter($columns, function($column) use($primaryKey) {
+            return $primaryKey !== $column;
+        });
     }
 
     /**
      * @return mixed
      */
-    public function getCustomColumnNames(): array
+    public function getCustomColumnNames() : array
     {
         if (method_exists($this->builder()->getModel(), 'getCustomColumnNames')) {
             return $this->builder()->getModel()->getCustomColumnNames();
@@ -81,7 +88,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @return mixed
      */
-    public function getDisplayableColumns(): array
+    public function getDisplayableColumns() : array
     {
         if (method_exists($this->builder()->getModel(), 'getDisplayableColumns')) {
             return array_values($this->builder()->getModel()->getDisplayableColumns());
@@ -100,19 +107,22 @@ abstract class BaseDataTableService implements Displayable
      */
 
     //
-    public function getRecords(Request $request = null, callable $callback = null): Collection
+    public function getRecords(Request $request = null, callable $callback = null) : Collection
     {
         $builder = $this->builder();
+
         // we will check if the request has a query string for search. the query string for searching must contain column, operator which identified at resolveQueryParts method in form of the keys of the array. and the value that user is trying to search for
         // example: http://localhost:8000/api/posts?column=title&operator=contains&value=hello
         if ($request && $this->hasSearchQuery($request)) {
             $builder = $this->buildSearchQuery($builder, $request);
         }
+
         // Turn on the flexibility for the programmer to apply his own query to chain on the current query then we will retrieve back the query builder after the programmer applies his logic and proceed our own queries.
         if ($callback) {
             $builder = $callback($builder);
             throw_unless($builder, new EloquentBuilderWasSetToNullException);
         }
+
         // we will try to parse the query and return the output of it, if anything goes wrong, by default we will be returning an empty collection.
         try {
             return $builder->select(...$this->getSelectableColumns())->limit($request->limit)->get($this->getDisplayableColumns());
@@ -124,7 +134,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @return array
      */
-    public function getSelectableColumns(): array
+    public function getSelectableColumns() : array
     {
         return $this->getDatabaseColumnNames();
     }
@@ -132,7 +142,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @return string
      */
-    public function getTable(): string
+    public function getTable() : string
     {
         return $this->builder()->getModel()->getTable();
     }
@@ -141,7 +151,7 @@ abstract class BaseDataTableService implements Displayable
      * get the columns that user can see at the frontend to update.
      * @return array
      */
-    public function getUpdatableColumns(): array
+    public function getUpdatableColumns() : array
     {
         if (method_exists($this->builder()->getModel(), 'getUpdatableColumns')) {
             return array_values($this->getColumnsWithoutPrimaryKey($this->builder()->getModel()->getUpdatableColumns()));
@@ -150,13 +160,11 @@ abstract class BaseDataTableService implements Displayable
         return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
     }
 
-    abstract public function query(): Builder;
-
     /**
      * return the response skeleton.
      * @return array
      */
-    public function response(callable $callback = null): array
+    public function response(callable $callback = null) : array
     {
 
         return [
@@ -176,7 +184,7 @@ abstract class BaseDataTableService implements Displayable
     /**
      * @param Builder $builder
      */
-    protected function buildSearchQuery(Builder $builder, Request $request): Builder
+    protected function buildSearchQuery(Builder $builder, Request $request) : Builder
     {
         ['operator' => $operator, 'value' => $value] = $this->resolveQueryParts($request->operator, $request->value);
         throw_if(!in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
@@ -188,7 +196,7 @@ abstract class BaseDataTableService implements Displayable
      * [getDatabaseColumnNames]
      * @return array
      */
-    protected function getDatabaseColumnNames(): array
+    protected function getDatabaseColumnNames() : array
     {
         return Schema::getColumnListing($this->getTable());
     }
@@ -197,17 +205,20 @@ abstract class BaseDataTableService implements Displayable
      * @param $request
      * @return int
      */
-    protected function hasSearchQuery(Request $request): bool
+    protected function hasSearchQuery(Request $request) : bool
     {
         return count(array_filter($request->only(['column', 'operator', 'value']))) === 3;
     }
 
     /**
+     * Resolve Query Parts.
+     *
      * @param $operator
      * @param $value
+     * 
      * @return array
      */
-    protected function resolveQueryParts($operator, $value)
+    protected function resolveQueryParts($operator, $value) : array
     {
         return Arr::get([
             'equals' => [

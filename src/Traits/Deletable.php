@@ -5,7 +5,9 @@ namespace Laravel\DataTables\Traits;
 trait Deletable
 {
     /**
-     * @var mixed
+     * Allow Entity Deleting
+     *
+     * @var bool
      */
     public $allowDeleting = false;
 
