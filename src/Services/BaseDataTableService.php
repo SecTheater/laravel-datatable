@@ -71,7 +71,7 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getColumnsWithoutPrimaryKey(array $columns): array
     {
-        $primaryKey = $this->builder()->getModel()->getKeyName();
+        $primaryKey = $this->getModel()->getKeyName();
 
         return array_filter($columns, function ($column) use ($primaryKey) {
             return $primaryKey !== $column;
@@ -85,8 +85,8 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getCustomColumnNames(): array
     {
-        if (method_exists($this, 'getCustomColumnNames')) {
-            return $this->getCustomColumnNames();
+        if (method_exists($model = $this->getModel(), 'getCustomColumnNames')) {
+            return $model->getCustomColumnNames();
         }
 
         return [];
@@ -99,8 +99,8 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getDisplayableColumns(): array
     {
-        if (method_exists($this, 'getDisplayableColumns')) {
-            return array_values($this->getDisplayableColumns());
+        if (method_exists($model = $this->getModel(), 'getDisplayableColumns')) {
+            return array_values($model->getDisplayableColumns());
         }
 
         return array_values(
@@ -109,6 +109,22 @@ abstract class BaseDataTableService implements Displayable
                 $this->getHidden()
             )
         );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        /**
+         * @var mixed
+         */
+        static $model = null;
+        if (!is_null($model)) {
+            return $model;
+        }
+
+        return $model = $this->builder()->getModel();
     }
 
     /**
@@ -138,10 +154,22 @@ abstract class BaseDataTableService implements Displayable
         try {
             // if the request doesn't have a limit, it will return null, and since limit takes an integer value >= 0, then it won't limit
             // at all since we will replace the null with a negative number.
-            return $builder->select(...$this->getDisplayableColumns())->limit($request->limit ?? -1)->get();
+            return $builder->select(...$this->getSelectableColumns())->limit($request->limit ?? -1)->get();
         } catch (QueryException $e) {
             return collect([]);
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSelectableColumns()
+    {
+        if (method_exists($model = $this->getModel(), 'getSelectableColumns')) {
+            return $model->getSelectableColumns();
+        }
+
+        return $this->getDisplayableColumns();
     }
 
     /**
@@ -151,7 +179,7 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getTable(): string
     {
-        return $this->builder()->getModel()->getTable();
+        return $this->getModel()->getTable();
     }
 
     /**
@@ -161,8 +189,8 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getUpdatableColumns(): array
     {
-        if (method_exists($this->builder()->getModel(), 'getUpdatableColumns')) {
-            return array_values($this->getColumnsWithoutPrimaryKey($this->builder()->getModel()->getUpdatableColumns()));
+        if (method_exists($model = $this->getModel(), 'getUpdatableColumns')) {
+            return array_values($this->getColumnsWithoutPrimaryKey($model->getUpdatableColumns()));
         }
 
         return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
