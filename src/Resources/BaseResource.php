@@ -18,7 +18,9 @@ abstract class BaseResource extends JsonResource
      */
     public function rejectNullValues($collection)
     {
-        return array_filter($collection, fn($resource) => !is_null($resource) || !empty($resource));
+        return array_filter($collection, function ($resource) {
+            return !is_null($resource) || !empty($resource);
+        });
     }
 
     /**
