@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 trait Updatable
 {
     /**
-     * @var mixed
+     * Allow Entity Updating
+     *
+     * @var bool
      */
     public $allowUpdating = false;
 

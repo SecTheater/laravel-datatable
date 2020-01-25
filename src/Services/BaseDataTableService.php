@@ -17,19 +17,23 @@ abstract class BaseDataTableService implements Displayable
     use Macroable;
 
     /**
-     * @var Builder
+     * The Query Builder.
+     *
+     * @var \Illuminate\Database\Eloquent\Builder
      */
     public $builder;
 
     /**
-     * load the relationships associated with the collection that will be returned.
+     * Load the relationships associated with the collection that will be returned.
+     *
      * @var array
      */
     public $relations;
 
     /**
-     * get/set the eloquent builder
-     * @return Builder
+     * Get/Set the eloquent builder.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
      */
     public function builder(): Builder
     {
@@ -41,95 +45,106 @@ abstract class BaseDataTableService implements Displayable
         if (!is_null($builder)) {
             return $builder;
         }
+
         $builder = $this->query();
 
         return $builder;
     }
 
+    /**
+     * Get The File Name When Exporting.
+     *
+     * @return string
+     */
     public function filename()
     {
         return vsprintf('%name_%date', [
             'name' => ucfirst($this->getTable()),
-            'date' => date('Y-m-d H:i:s'),
+            'date' => date('Y-m-d_H:i:s'),
         ]);
     }
 
     /**
-     * @param $columns
+     * Get columns without primary key.
+     *
+     * @param array $columns
      */
-    public function getColumnsWithoutPrimaryKey($columns)
+    public function getColumnsWithoutPrimaryKey(array $columns): array
     {
         $primaryKey = $this->builder()->getModel()->getKeyName();
 
-        return array_filter($columns, fn($column) => $primaryKey !== $column);
+        return array_filter($columns, function ($column) use ($primaryKey) {
+            return $primaryKey !== $column;
+        });
     }
 
     /**
-     * @return mixed
+     * Get Custom Column Names.
+     *
+     * @return array
      */
     public function getCustomColumnNames(): array
     {
-        if (method_exists($this->builder()->getModel(), 'getCustomColumnNames')) {
-            return $this->builder()->getModel()->getCustomColumnNames();
+        if (method_exists($this, 'getCustomColumnNames')) {
+            return $this->getCustomColumnNames();
         }
 
-        return [
-
-        ];
+        return [];
     }
 
     /**
-     * @return mixed
+     * Get displayable columns.
+     *
+     * @return array
      */
     public function getDisplayableColumns(): array
     {
-        if (method_exists($this->builder()->getModel(), 'getDisplayableColumns')) {
-            return array_values($this->builder()->getModel()->getDisplayableColumns());
+        if (method_exists($this, 'getDisplayableColumns')) {
+            return array_values($this->getDisplayableColumns());
         }
 
         return array_values(
             array_diff(
                 $this->getDatabaseColumnNames(),
-                $this->builder()->getModel()->getHidden()
+                $this->getHidden()
             )
         );
     }
 
     /**
+     * Fetch records from the database.
+     *
+     * @param  Request    $request
+     * @param  callable   $callback
      * @return Collection
      */
-
-    //
     public function getRecords(Request $request = null, callable $callback = null): Collection
     {
         $builder = $this->builder();
+
         // we will check if the request has a query string for search. the query string for searching must contain column, operator which identified at resolveQueryParts method in form of the keys of the array. and the value that user is trying to search for
         // example: http://localhost:8000/api/posts?column=title&operator=contains&value=hello
         if ($request && $this->hasSearchQuery($request)) {
             $builder = $this->buildSearchQuery($builder, $request);
         }
+
         // Turn on the flexibility for the programmer to apply his own query to chain on the current query then we will retrieve back the query builder after the programmer applies his logic and proceed our own queries.
         if ($callback) {
             $builder = $callback($builder);
             throw_unless($builder, new EloquentBuilderWasSetToNullException);
         }
+
         // we will try to parse the query and return the output of it, if anything goes wrong, by default we will be returning an empty collection.
         try {
-            return $builder->select(...$this->getSelectableColumns())->limit($request->limit)->get($this->getDisplayableColumns());
+            return $builder->select(...$this->getDisplayableColumns())->limit($request->limit)->get();
         } catch (QueryException $e) {
             return collect([]);
         }
     }
 
     /**
-     * @return array
-     */
-    public function getSelectableColumns(): array
-    {
-        return $this->getDatabaseColumnNames();
-    }
-
-    /**
+     * Get The Table Name.
+     *
      * @return string
      */
     public function getTable(): string
@@ -138,7 +153,8 @@ abstract class BaseDataTableService implements Displayable
     }
 
     /**
-     * get the columns that user can see at the frontend to update.
+     * Get the columns that user can see at the frontend to update.
+     *
      * @return array
      */
     public function getUpdatableColumns(): array
@@ -150,15 +166,20 @@ abstract class BaseDataTableService implements Displayable
         return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
     }
 
+    /**
+     * Get query source of dataTable.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     abstract public function query(): Builder;
 
     /**
-     * return the response skeleton.
+     * Return the response skeleton.
+     *
      * @return array
      */
     public function response(callable $callback = null): array
     {
-
         return [
             'table' => $this->getTable(),
             'displayable' => $this->getDisplayableColumns(),
@@ -174,19 +195,24 @@ abstract class BaseDataTableService implements Displayable
     }
 
     /**
-     * @param Builder $builder
+     * Build Search Query.
+     *
+     * @param  Builder $builder
+     * @param  Request $request
+     * @return Builder
      */
     protected function buildSearchQuery(Builder $builder, Request $request): Builder
     {
         ['operator' => $operator, 'value' => $value] = $this->resolveQueryParts($request->operator, $request->value);
-        // validate against the request column which coming through the request object, that it must exist at the database columns, as well as the displayable columns.
+
         throw_unless(in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
 
         return $builder->where($request->column, $operator, $value);
     }
 
     /**
-     * [getDatabaseColumnNames]
+     * Get Database Column Names.
+     *
      * @return array
      */
     protected function getDatabaseColumnNames(): array
@@ -195,8 +221,10 @@ abstract class BaseDataTableService implements Displayable
     }
 
     /**
-     * @param $request
-     * @return int
+     * Check if the request has a search query.
+     *
+     * @param \Illuminate\Http\Request $request.
+     * @return bool
      */
     protected function hasSearchQuery(Request $request): bool
     {
@@ -204,11 +232,14 @@ abstract class BaseDataTableService implements Displayable
     }
 
     /**
-     * @param $operator
-     * @param $value
+     * Resolve Query Parts.
+     *
+     * @param string $operator
+     * @param string $value
+     *
      * @return array
      */
-    protected function resolveQueryParts($operator, $value)
+    protected function resolveQueryParts(string $operator, string $value): array
     {
         return Arr::get([
             'equals' => [

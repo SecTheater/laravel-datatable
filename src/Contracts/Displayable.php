@@ -4,9 +4,24 @@ namespace Laravel\DataTables\Contracts;
 
 interface Displayable
 {
-    public function getCustomColumnNames();
+    /**
+     * Get Custom Column Names.
+     *
+     * @return array
+     */
+    public function getCustomColumnNames() : array;
 
-    public function getDisplayableColumns();
+    /**
+     * Get displayable columns.
+     *
+     * @return array
+     */
+    public function getDisplayableColumns() : array;
 
-    public function getUpdatableColumns();
+    /**
+     * Get the columns that user can see at the frontend to update.
+     *
+     * @return array
+     */
+    public function getUpdatableColumns() : array;
 }
