@@ -136,7 +136,9 @@ abstract class BaseDataTableService implements Displayable
 
         // we will try to parse the query and return the output of it, if anything goes wrong, by default we will be returning an empty collection.
         try {
-            return $builder->select(...$this->getDisplayableColumns())->limit($request->limit)->get();
+            // if the request doesn't have a limit, it will return null, and since limit takes an integer value >= 0, then it won't limit
+            // at all since we will replace the null with a negative number.
+            return $builder->select(...$this->getDisplayableColumns())->limit($request->limit ?? -1)->get();
         } catch (QueryException $e) {
             return collect([]);
         }
