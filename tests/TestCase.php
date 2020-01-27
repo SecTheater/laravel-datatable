@@ -3,6 +3,7 @@ namespace Laravel\DataTables\Tests;
 
 use Faker\Factory;
 use Illuminate\Database\Schema\Blueprint;
+use Laravel\DataTables\Tests\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Laravel\DataTables\LaravelDataTablesServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
@@ -56,10 +57,11 @@ abstract class TestCase extends Orchestra
 
         });
         collect(range(80, 100))->each(function (int $i) {
-            Step::create([
+            User::create([
                 'title' => $i,
                 'order' => rand(),
             ]);
         });
+        dd('here');
     }
 }

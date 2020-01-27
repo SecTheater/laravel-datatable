@@ -84,18 +84,16 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getDisplayableColumns(): array
     {
+
         if (method_exists($model = $this->getModel(), 'getDisplayableColumns')) {
-            return array_values($model->getDisplayableColumns());
+            return $model->getDisplayableColumns();
         }
 
-        return array_values(
-            array_diff(
-                $this->getDatabaseColumnNames(),
-                $this->getModel()->getHidden()
-            )
+        return array_diff(
+            $this->getDatabaseColumnNames(),
+            $this->getModel()->getHidden()
         );
     }
-
     /**
      * @return mixed
      */
@@ -169,13 +167,16 @@ abstract class BaseDataTableService implements Displayable
         return $this->getModel()->getTable();
     }
 
+    /**
+     * @return array
+     */
     public function getUpdatableColumns(): array
     {
         if (method_exists($this->getModel(), 'getUpdatableColumns')) {
-            return array_values($this->getColumnsWithoutPrimaryKey($this->getModel()->getUpdatableColumns()));
+            return $this->getColumnsWithoutPrimaryKey($this->getModel()->getUpdatableColumns());
         }
 
-        return array_values($this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns()));
+        return $this->getColumnsWithoutPrimaryKey($this->getDisplayableColumns());
     }
 
     /**
