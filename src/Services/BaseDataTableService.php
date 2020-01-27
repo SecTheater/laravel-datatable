@@ -94,6 +94,7 @@ abstract class BaseDataTableService implements Displayable
             $this->getModel()->getHidden()
         );
     }
+
     /**
      * @return mixed
      */
@@ -138,7 +139,7 @@ abstract class BaseDataTableService implements Displayable
             // if the request doesn't have a limit, it will return null, and since limit takes an integer value >= 0, then it won't limit
             // at all since we will replace the null with a negative number.
             return $builder->select(...$this->getSelectableColumns())->limit(
-                is_int($request->limit) ? $request->limit : -1
+                $request->limit ?? -1
             )->get();
         } catch (QueryException $e) {
             return collect([]);

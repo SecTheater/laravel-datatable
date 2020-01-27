@@ -31,4 +31,12 @@ class User extends Model
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function getUpdatableColumns()
+    {
+        return [
+            'email',
+            'name',
+        ];
+    }
 }

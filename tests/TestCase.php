@@ -1,24 +1,23 @@
 <?php
 namespace Laravel\DataTables\Tests;
 
-use Faker\Factory;
 use Illuminate\Database\Schema\Blueprint;
-use Laravel\DataTables\Tests\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\DataTables\LaravelDataTablesServiceProvider;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 
 abstract class TestCase extends Orchestra
 {
+    use RefreshDatabase;
+
     public function setUp(): void
     {
-        $pathToFactories = realpath(dirname(__DIR__) . '/tests');
 
         parent::setUp();
 
-        // This overrides the $this->factory that is established in TestBench's setUp method above
-        $this->factory = EloquentFactory::construct(Factory::create(), $pathToFactories);
         $this->setUpDatabase();
+        $this->withFactories(__DIR__ . '/factories');
+
     }
 
     /**
@@ -56,12 +55,5 @@ abstract class TestCase extends Orchestra
             $table->timestamps();
 
         });
-        collect(range(80, 100))->each(function (int $i) {
-            User::create([
-                'title' => $i,
-                'order' => rand(),
-            ]);
-        });
-        dd('here');
     }
 }
