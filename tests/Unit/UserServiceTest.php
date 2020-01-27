@@ -4,6 +4,7 @@ namespace Tests\Unit;
 use Illuminate\Support\Facades\Schema;
 use Laravel\DataTables\Tests\TestCase;
 use Laravel\DataTables\Tests\Models\User;
+use Laravel\DataTables\Tests\Models\Product;
 use Laravel\DataTables\Services\BaseDataTableService;
 use Laravel\DataTables\Tests\Services\UserDataTableService;
 use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
@@ -91,6 +92,19 @@ class UserServiceTest extends TestCase
         // since selectable columns don't contain password, and since laravel will interpret any value that doesn't exist at the attributes to null, we can assert against that.
         factory(User::class)->create();
         $this->assertNull($this->userDataTableService->getRecords()->first()->password);
+    }
+
+    /** @test */
+    public function it_should_get_records_loaded_with_products_relationship()
+    {
+        $this->userDataTableService->relations = ['products'];
+        $users = factory(User::class, 3)->create();
+        foreach ($users as $user) {
+            factory(Product::class, 2)->create([
+                'user_id' => $user->id,
+            ]);
+        }
+        $this->assertCount(2, $this->userDataTableService->response()['records']->first()->products);
     }
 
     /** @test */

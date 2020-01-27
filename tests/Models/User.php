@@ -2,6 +2,7 @@
 namespace Laravel\DataTables\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\DataTables\Tests\Models\Product;
 
 class User extends Model
 {
@@ -38,5 +39,13 @@ class User extends Model
             'email',
             'name',
         ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }

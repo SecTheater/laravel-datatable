@@ -55,5 +55,13 @@ abstract class TestCase extends Orchestra
             $table->timestamps();
 
         });
+        $this->app['db']->connection()->getSchemaBuilder()->create('products', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('name')->unique();
+            $table->bigInteger('stock')->default(1);
+            $table->timestamps();
+
+        });
     }
 }

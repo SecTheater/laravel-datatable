@@ -18,13 +18,6 @@ abstract class BaseDataTableService implements Displayable
     use Macroable;
 
     /**
-     * The Query Builder.
-     *
-     * @var \Illuminate\Database\Eloquent\Builder
-     */
-    public $builder;
-
-    /**
      * Load the relationships associated with the collection that will be returned.
      *
      * @var array
