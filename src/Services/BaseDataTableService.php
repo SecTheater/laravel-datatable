@@ -37,7 +37,7 @@ abstract class BaseDataTableService implements Displayable
         static $builder = null;
 
         if (!is_null($builder)) {
-            return $builder;
+            return $builder = $this->query()->newQuery();
         }
         $builder = $this->query();
 
