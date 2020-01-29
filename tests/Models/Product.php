@@ -1,4 +1,5 @@
 <?php
+
 namespace Laravel\DataTables\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;

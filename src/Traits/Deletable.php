@@ -5,7 +5,7 @@ namespace Laravel\DataTables\Traits;
 trait Deletable
 {
     /**
-     * Allow Entity Deleting
+     * Allow Entity Deleting.
      *
      * @var bool
      */
@@ -16,10 +16,10 @@ trait Deletable
      * @param Request $request
      * @return bool|null
      */
-    public function destroy($ids):  ? bool
+    public function destroy($ids): ?bool
     {
         $ids = (array) $ids;
-        if (!$this->allowDeleting) {
+        if (! $this->allowDeleting) {
             return null;
         }
 

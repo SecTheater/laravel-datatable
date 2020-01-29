@@ -1,13 +1,14 @@
 <?php
+
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Schema;
-use Laravel\DataTables\Tests\TestCase;
-use Laravel\DataTables\Tests\Models\User;
-use Laravel\DataTables\Services\BaseDataTableService;
-use Laravel\DataTables\Tests\Services\UserDataTableService;
-use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
 use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
+use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
+use Laravel\DataTables\Services\BaseDataTableService;
+use Laravel\DataTables\Tests\Models\User;
+use Laravel\DataTables\Tests\Services\UserDataTableService;
+use Laravel\DataTables\Tests\TestCase;
 
 class UserServiceTest extends TestCase
 {
@@ -34,14 +35,13 @@ class UserServiceTest extends TestCase
         $reflectionMethod->setAccessible(true);
 
         $this->assertEquals(
-            "select * from \"users\" where \"id\" = ?",
+            'select * from "users" where "id" = ?',
             $reflectionMethod->invoke(
                 $this->userDataTableService,
                 $this->userDataTableService->builder(), request()
             )
                 ->toSql()
         );
-
     }
 
     /** @test */
@@ -51,7 +51,6 @@ class UserServiceTest extends TestCase
         $reflectionMethod->setAccessible(true);
 
         $this->assertEquals(['operator' => '=', 'value' => $value = 'something'], $reflectionMethod->invoke($this->userDataTableService, 'equals', $value));
-
     }
 
     /** @test */
@@ -66,7 +65,6 @@ class UserServiceTest extends TestCase
 
             return $builder;
         })->first()->id);
-
     }
 
     /** @test */
@@ -162,7 +160,6 @@ class UserServiceTest extends TestCase
             'deletable' => false,
             'updatable' => false,
         ], $response['allow']);
-
     }
 
     /** @test */
@@ -199,9 +196,7 @@ class UserServiceTest extends TestCase
         $this->expectException(EloquentBuilderWasSetToNullException::class);
         $this->userDataTableService->getRecords(request(), function ($builder) {
             $builder->orderBy('id', 'desc');
-
         });
-
     }
 
     /** @test */
@@ -221,7 +216,6 @@ class UserServiceTest extends TestCase
             $this->userDataTableService,
             $this->userDataTableService->builder(), request()
         );
-
     }
 
     public function setUp(): void
