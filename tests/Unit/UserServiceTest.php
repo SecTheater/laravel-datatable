@@ -4,7 +4,6 @@ namespace Tests\Unit;
 use Illuminate\Support\Facades\Schema;
 use Laravel\DataTables\Tests\TestCase;
 use Laravel\DataTables\Tests\Models\User;
-use Laravel\DataTables\Tests\Models\Product;
 use Laravel\DataTables\Services\BaseDataTableService;
 use Laravel\DataTables\Tests\Services\UserDataTableService;
 use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
@@ -58,7 +57,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function it_should_get_3_records_oredered_by_id()
     {
-        factory(User::class, 6)->create();
+        factory(\Laravel\DataTables\Tests\Models\User::class, 6)->create();
         request()->merge([
             'limit' => 3,
         ]);
@@ -79,7 +78,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function it_should_get_only_3_records()
     {
-        factory(User::class, 6)->create();
+        factory(\Laravel\DataTables\Tests\Models\User::class, 6)->create();
         request()->merge([
             'limit' => 3,
         ]);
@@ -90,7 +89,7 @@ class UserServiceTest extends TestCase
     public function it_should_get_only_selectable_columns_from_sql()
     {
         // since selectable columns don't contain password, and since laravel will interpret any value that doesn't exist at the attributes to null, we can assert against that.
-        factory(User::class)->create();
+        factory(\Laravel\DataTables\Tests\Models\User::class)->create();
         $this->assertNull($this->userDataTableService->getRecords()->first()->password);
     }
 
@@ -98,9 +97,9 @@ class UserServiceTest extends TestCase
     public function it_should_get_records_loaded_with_products_relationship()
     {
         $this->userDataTableService->relations = ['products'];
-        $users = factory(User::class, 3)->create();
+        $users = factory(\Laravel\DataTables\Tests\Models\User::class, 3)->create();
         foreach ($users as $user) {
-            factory(Product::class, 2)->create([
+            factory(\Laravel\DataTables\Tests\Models\Product::class, 2)->create([
                 'user_id' => $user->id,
             ]);
         }
@@ -110,7 +109,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function it_should_get_records_with_searched_value_only()
     {
-        factory(User::class, 3)->create();
+        factory(\Laravel\DataTables\Tests\Models\User::class, 3)->create();
         request()->merge([
             'limit' => 1,
             'column' => 'id',
@@ -123,7 +122,7 @@ class UserServiceTest extends TestCase
     /** @test */
     public function it_should_get_the_current_model_instance_that_is_set_to()
     {
-        $this->assertInstanceOf(User::class, $this->userDataTableService->getModel());
+        $this->assertInstanceOf(\Laravel\DataTables\Tests\Models\User::class, $this->userDataTableService->getModel());
     }
 
     /** @test */
