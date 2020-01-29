@@ -35,6 +35,9 @@
         "test": "vendor/bin/phpunit"
     },
     "autoload": {
+        "classmap": [
+            "tests/factories"
+        ],
         "psr-4": {
             "Laravel\\DataTables\\" : "src/"
         }
