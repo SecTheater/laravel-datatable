@@ -1,10 +1,11 @@
 <?php
+
 namespace Laravel\DataTables\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\DataTables\LaravelDataTablesServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 abstract class TestCase extends Orchestra
 {
@@ -12,12 +13,10 @@ abstract class TestCase extends Orchestra
 
     public function setUp(): void
     {
-
         parent::setUp();
 
         $this->setUpDatabase();
-        $this->withFactories(__DIR__ . '/factories');
-
+        $this->withFactories(__DIR__.'/factories');
     }
 
     /**
@@ -53,7 +52,6 @@ abstract class TestCase extends Orchestra
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
-
         });
         $this->app['db']->connection()->getSchemaBuilder()->create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
@@ -61,7 +59,6 @@ abstract class TestCase extends Orchestra
             $table->string('name')->unique();
             $table->bigInteger('stock')->default(1);
             $table->timestamps();
-
         });
     }
 }

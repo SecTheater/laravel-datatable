@@ -2,8 +2,8 @@
 
 namespace Laravel\DataTables\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\GeneratorCommand;
+use Illuminate\Support\Str;
 
 class RegisterServiceDataTableCommand extends GeneratorCommand
 {
@@ -15,14 +15,14 @@ class RegisterServiceDataTableCommand extends GeneratorCommand
     /**
      * @var string
      */
-    protected $type = "Datatable";
+    protected $type = 'Datatable';
 
     /**
      * @param $name
      */
     public function replaceModelName($name)
     {
-        return str_replace($this->getNamespace($name) . '\\', '', $name);
+        return str_replace($this->getNamespace($name).'\\', '', $name);
     }
 
     /**
@@ -48,12 +48,12 @@ class RegisterServiceDataTableCommand extends GeneratorCommand
      */
     protected function getDefaultNamespace($rootNamespace)
     {
-        return $rootNamespace . '\Services';
+        return $rootNamespace.'\Services';
     }
 
     protected function getStub()
     {
-        return __DIR__ . '/stubs/DatatableService.stub';
+        return __DIR__.'/stubs/DatatableService.stub';
     }
 
     /**
@@ -62,12 +62,12 @@ class RegisterServiceDataTableCommand extends GeneratorCommand
      */
     protected function repalceModelNamespace($name)
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+        $class = str_replace($this->getNamespace($name).'\\', '', $name);
         if ($namespace = $this->getNamespace($name)) {
             return sprintf('%s\\%s', $namespace, $class);
         }
 
-        return sprintf('%s\\%s', "App", $class);
+        return sprintf('%s\\%s', 'App', $class);
     }
 
     /**
@@ -76,7 +76,7 @@ class RegisterServiceDataTableCommand extends GeneratorCommand
      */
     protected function replaceClass($stub, $name)
     {
-        $class = str_replace($this->getNamespace($name) . '\\', '', $name);
+        $class = str_replace($this->getNamespace($name).'\\', '', $name);
 
         return str_replace('DummiesDatatableService', $class, parent::replaceClass($stub, $name));
     }

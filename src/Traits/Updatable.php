@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 trait Updatable
 {
     /**
-     * Allow Entity Updating
+     * Allow Entity Updating.
      *
      * @var bool
      */
@@ -19,9 +19,9 @@ trait Updatable
      * @param array $data
      * @return Model
      */
-    public function update(Model $model, array $data = []):  ? Model
+    public function update(Model $model, array $data = []): ?Model
     {
-        if (!$this->allowUpdating) {
+        if (! $this->allowUpdating) {
             return null;
         }
 

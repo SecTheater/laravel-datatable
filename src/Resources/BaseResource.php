@@ -2,8 +2,8 @@
 
 namespace Laravel\DataTables\Resources;
 
-use Illuminate\Support\Arr;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 use Laravel\DataTables\Services\BaseDataTableService;
 
 abstract class BaseResource extends JsonResource
@@ -19,13 +19,14 @@ abstract class BaseResource extends JsonResource
     public function rejectNullValues($resource)
     {
         return array_filter($resource, function ($value) {
-            return !is_null($value) || !empty($value);
+            return ! is_null($value) || ! empty($value);
         });
     }
 
     /**
      * @param $request
      */
+
     /**
      * @param $request
      */

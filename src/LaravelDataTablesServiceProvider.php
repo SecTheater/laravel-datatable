@@ -18,9 +18,9 @@ class LaravelDataTablesServiceProvider extends ServiceProvider
 
     public function registerPublishables()
     {
-        $publishablePath = __DIR__ . '/publishable';
+        $publishablePath = __DIR__.'/publishable';
         $this->publishes([
-            $publishablePath . '/js' => resource_path('js/laravel-datatables/components'),
+            $publishablePath.'/js' => resource_path('js/laravel-datatables/components'),
         ], 'datatable');
     }
 

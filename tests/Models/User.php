@@ -1,8 +1,8 @@
 <?php
+
 namespace Laravel\DataTables\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\DataTables\Tests\Models\Product;
 
 class User extends Model
 {

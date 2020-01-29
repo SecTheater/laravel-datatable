@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 trait Creatable
 {
     /**
-     * Allow Entity Creation
+     * Allow Entity Creation.
      *
      * @var bool
      */
@@ -18,9 +18,9 @@ trait Creatable
      * @param array $data
      * @return mixed
      */
-    public function create(array $data): ? Model
+    public function create(array $data): ?Model
     {
-        if (!$this->allowCreation) {
+        if (! $this->allowCreation) {
             return null;
         }
 

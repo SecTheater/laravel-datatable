@@ -1,17 +1,18 @@
 <?php
+
 namespace Laravel\DataTables\Services;
 
 use Arr;
-use Schema;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Traits\Macroable;
 use Laravel\DataTables\Contracts\Displayable;
-use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
 use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
+use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
+use Schema;
 
 abstract class BaseDataTableService implements Displayable
 {
@@ -36,7 +37,7 @@ abstract class BaseDataTableService implements Displayable
          */
         static $builder = null;
 
-        if (!is_null($builder) && !app()->environment('testing')) {
+        if (! is_null($builder) && ! app()->environment('testing')) {
             return $builder;
         }
         $builder = $this->query()->newQuery();
@@ -77,7 +78,6 @@ abstract class BaseDataTableService implements Displayable
      */
     public function getDisplayableColumns(): array
     {
-
         if (method_exists($model = $this->getModel(), 'getDisplayableColumns')) {
             return $model->getDisplayableColumns();
         }
@@ -97,7 +97,7 @@ abstract class BaseDataTableService implements Displayable
          * @var mixed
          */
         static $model = null;
-        if (!is_null($model)) {
+        if (! is_null($model)) {
             return $model;
         }
 

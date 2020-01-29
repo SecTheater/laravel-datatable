@@ -3,8 +3,8 @@
 namespace Laravel\DataTables\Tests\Services;
 
 use Illuminate\Database\Eloquent\Builder;
-use Laravel\DataTables\Tests\Models\User;
 use Laravel\DataTables\Services\BaseDataTableService;
+use Laravel\DataTables\Tests\Models\User;
 
 class UserDataTableService extends BaseDataTableService
 {
@@ -18,7 +18,6 @@ class UserDataTableService extends BaseDataTableService
      */
     public function __construct(User $user)
     {
-
         $this->users = $user;
     }
 
