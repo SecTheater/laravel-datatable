@@ -36,10 +36,10 @@ abstract class BaseDataTableService implements Displayable
          */
         static $builder = null;
 
-        if (!is_null($builder)) {
-            return $builder = $this->query()->newQuery();
+        if (!is_null($builder) && !app()->environment('testing')) {
+            return $builder;
         }
-        $builder = $this->query();
+        $builder = $this->query()->newQuery();
 
         return $builder;
     }

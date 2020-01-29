@@ -75,7 +75,7 @@ export default memo(({endpoint}) => {
     const getRecords = () => {
         fetch(`${endpoint}/?${queryParameters}`)
         .then(response => response.json())
-        .then(({ data }) => dispatch({ 
+        .then(({ data }) => dspatch({ 
             type: "SET_RESPONSE", 
             payload: data 
         }))
