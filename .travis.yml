@@ -9,6 +9,7 @@ before_script:
   - composer require sectheater/laravel-datatables:dev-master
   - php artisan key:generate
   - echo '<?php ' > routes/api.php
+  - echo '<?php ' > routes/web.php
   - php artisan clear-compiled
   - php artisan optimize
   - composer dump-autoload
