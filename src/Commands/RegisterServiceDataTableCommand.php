@@ -34,8 +34,8 @@ class RegisterServiceDataTableCommand extends GeneratorCommand
     {
         $modelName = $this->replaceModelName($this->argument('model'));
         $stub = str_replace(
-            [ 'NamespacedDummyModel', 'DummyNamespace', 'DummyModel', 'dummies' ],
-            [ $this->repalceModelNamespace($this->argument('model')), $this->getNamespace($name), $modelName, strtolower(Str::plural($modelName)) ],
+            ['NamespacedDummyModel', 'DummyNamespace', 'DummyModel', 'dummies'],
+            [$this->repalceModelNamespace($this->argument('model')), $this->getNamespace($name), $modelName, strtolower(Str::plural($modelName))],
             $stub
         );
 

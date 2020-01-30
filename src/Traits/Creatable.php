@@ -20,7 +20,7 @@ trait Creatable
      */
     public function create(array $data): ?Model
     {
-        if (!$this->allowCreation) {
+        if (! $this->allowCreation) {
             return null;
         }
 
