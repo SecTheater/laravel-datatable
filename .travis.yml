@@ -7,9 +7,11 @@ before_script:
   - cd ./laravel
   - composer config repositories.sectheater vcs https://github.com/sectheater/laravel-datatable.git
   - composer require sectheater/laravel-datatables:dev-master
-  - composer update
   - php artisan key:generate
-  - composer dump-autoload -o
+  - php artisan clear-compiled
+  - php artisan optimize
+  - composer dump-autoload
   - cd ./vendor/sectheater/laravel-datatables
   - composer install
+  - composer dump-autoload -o
 script: "phpunit"
