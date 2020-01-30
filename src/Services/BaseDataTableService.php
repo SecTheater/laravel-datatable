@@ -37,7 +37,7 @@ abstract class BaseDataTableService implements Displayable
          */
         static $builder = null;
 
-        if (! is_null($builder) && ! app()->environment('testing')) {
+        if (!is_null($builder) && !app()->environment('testing')) {
             return $builder;
         }
         $builder = $this->query()->newQuery();
@@ -52,7 +52,7 @@ abstract class BaseDataTableService implements Displayable
     {
         $primaryKey = $this->getModel()->getKeyName();
 
-        return array_filter($columns, function ($column) use ($primaryKey) {
+        return array_filter($columns, function($column) use ($primaryKey) {
             return $primaryKey !== $column;
         });
     }
@@ -68,7 +68,7 @@ abstract class BaseDataTableService implements Displayable
             return $model->getCustomColumnNames();
         }
 
-        return [];
+        return [ ];
     }
 
     /**
@@ -97,7 +97,7 @@ abstract class BaseDataTableService implements Displayable
          * @var mixed
          */
         static $model = null;
-        if (! is_null($model)) {
+        if (!is_null($model)) {
             return $model;
         }
 
@@ -135,7 +135,7 @@ abstract class BaseDataTableService implements Displayable
                 $request->limit ?? -1
             )->get();
         } catch (QueryException $e) {
-            return collect([]);
+            return collect([ ]);
         }
     }
 
@@ -210,7 +210,7 @@ abstract class BaseDataTableService implements Displayable
      */
     protected function buildSearchQuery(Builder $builder, Request $request): Builder
     {
-        ['operator' => $operator, 'value' => $value] = $this->resolveQueryParts($request->operator, $request->value);
+        [ 'operator' => $operator, 'value' => $value ] = $this->resolveQueryParts($request->operator, $request->value);
 
         throw_unless(in_array($request->column, $this->getDisplayableColumns()), InvalidColumnSearchException::class);
 
@@ -235,7 +235,7 @@ abstract class BaseDataTableService implements Displayable
      */
     protected function hasSearchQuery(Request $request): bool
     {
-        return count(array_filter($request->only(['column', 'operator', 'value']))) === 3;
+        return count(array_filter($request->only([ 'column', 'operator', 'value' ]))) === 3;
     }
 
     /**
