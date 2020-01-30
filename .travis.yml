@@ -11,5 +11,6 @@ before_script:
   - php artisan key:generate
   - composer dump-autoload -o
   - cd ./vendor/sectheater/laravel-datatables
+  - pwd
 script:
-  - ./vendor/bin/phpunit
+  - phpunit
