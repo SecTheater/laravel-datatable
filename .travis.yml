@@ -12,5 +12,4 @@ before_script:
   - composer dump-autoload -o
   - cd ./vendor/sectheater/laravel-datatables
   - pwd
-script:
-  - phpunit
+script: "phpunit"
