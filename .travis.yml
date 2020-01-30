@@ -3,8 +3,13 @@ php:
   - 7.4
 before_script:
   - composer self-update
-  - composer install --prefer-source --no-interaction
+  - composer create-project laravel/laravel
+  - cd ./laravel
+  - composer config repositories.sectheater vcs https://github.com/sectheater/laravel-datatable.git
+  - composer require sectheater/laravel-datatables:dev-master
+  - composer update
+  - php artisan key:generate
   - composer dump-autoload -o
+  - cd ./vendor/sectheater/laravel-datatables
 script:
-  - mkdir -p build/logs
-  - vendor/bin/phpunit -c phpunit.xml
+  - vendor/bin/phpunit
