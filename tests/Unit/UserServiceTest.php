@@ -3,12 +3,12 @@
 namespace Tests\Unit;
 
 use Illuminate\Support\Facades\Schema;
-use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
-use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
-use Laravel\DataTables\Services\BaseDataTableService;
-use Laravel\DataTables\Tests\Models\User;
-use Laravel\DataTables\Tests\Services\UserDataTableService;
 use Laravel\DataTables\Tests\TestCase;
+use Laravel\DataTables\Tests\Models\User;
+use Laravel\DataTables\Services\BaseDataTableService;
+use Laravel\DataTables\Tests\Services\UserDataTableService;
+use Laravel\DataTables\Exceptions\InvalidColumnSearchException;
+use Laravel\DataTables\Exceptions\EloquentBuilderWasSetToNullException;
 
 class UserServiceTest extends TestCase
 {
@@ -18,6 +18,7 @@ class UserServiceTest extends TestCase
         BaseDataTableService::macro('sum', function (...$values) {
             return array_sum($values);
         });
+
         $this->assertEquals(6, $this->userDataTableService->sum(1, 2, 3));
     }
 
