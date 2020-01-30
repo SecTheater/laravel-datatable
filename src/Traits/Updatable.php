@@ -19,13 +19,13 @@ trait Updatable
      * @param array $data
      * @return Model
      */
-    public function update(Model $model, array $data = []): ?Model
+    public function update(Model $model, array $data = [ ]): ?Model
     {
-        if (! $this->allowUpdating) {
+        if (!$this->allowUpdating) {
             return null;
         }
 
-        return tap($model, function ($model) use ($data) {
+        return tap($model, function($model) use ($data) {
             $model->update(Arr::only($data, $this->getUpdatableColumns()));
         });
     }
