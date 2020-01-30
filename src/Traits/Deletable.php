@@ -19,7 +19,7 @@ trait Deletable
     public function destroy($ids): ?bool
     {
         $ids = (array) $ids;
-        if (! $this->allowDeleting) {
+        if (!$this->allowDeleting) {
             return null;
         }
 
